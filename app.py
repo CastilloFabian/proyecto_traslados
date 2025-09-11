@@ -8,8 +8,9 @@ app = Flask(__name__)
 app.config['MYSQL_HOST'] = "mysql.railway.internal"
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_USER'] = "root"
-app.config['MYSQL_PASSWORD'] = "thNJxCoPScDJDOxMVHPDRqqvogKjwqHg"
+app.config['MYSQL_PASSWORD'] = "CXRqihfdNfzmKERomjPwTlYxaqHNPHdA"
 app.config['MYSQL_DB'] = "railway"
+app.config['MYSQL_URL'] = "mysql://root:CXRqihfdNfzmKERomjPwTlYxaqHNPHdA@mysql.railway.internal:3306/railway"
 mysql = MySQL(app)
 
 
