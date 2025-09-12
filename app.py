@@ -1,29 +1,36 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_mysqldb import MySQL
+from dotenv import load_dotenv
+
+# Cargar variables del archivo .env
+load_dotenv()
 
 app = Flask(__name__)
 
+# Configuración de la base de datos usando variables de entorno
+app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
+app.config['MYSQL_PORT'] = int(os.environ.get('MYSQL_PORT', 3306))  # Default a 3306
+app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER')
+app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
+app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB')
 
-app.config['MYSQL_HOST'] = "mysql.railway.internal"
-app.config['MYSQL_PORT'] = 3306
-app.config['MYSQL_USER'] = "root"
-app.config['MYSQL_PASSWORD'] = "KuarVtvnJSlZGhbLyJzDiUIsUKLAVdiQ"
-app.config['MYSQL_DB'] = "railway"
-app.config['MYSQL_URL'] = "sql://root:KuarVtvnJSlZGhbLyJzDiUIsUKLAVdiQ@mysql.railway.internal:3306/railway"
+# Inicializar MySQL
 mysql = MySQL(app)
 
-
-# Secret key para sesiones
+# Clave secreta para sesiones
 app.secret_key = 'mysecretkey'
 
 
 @app.route('/')
 def Index():
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM beneficiario')
-    data = cur.fetchall()
-    return render_template('index.html', beneficiarios=data)
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM beneficiario')
+        data = cur.fetchall()
+        return render_template('index.html', beneficiarios=data)
+    except Exception as e:
+        return f"Error de conexión a la base de datos: {str(e)}", 500
 
 
 @app.route('/agregarBeneficiario', methods=['POST'])
@@ -38,12 +45,11 @@ def agregarBeneficiario():
         cur.execute('INSERT INTO beneficiario (nombre, apellido, dni) VALUES (%s,%s,%s)',
                     (nombre, apellido, dni))
         mysql.connection.commit()
+
         flash('Beneficiario agregado con éxito')
 
         # Obtener el ID del beneficiario recién agregado
-        cur.execute('SELECT id_beneficiario FROM beneficiario WHERE dni = %s', (dni,))
-        beneficiario = cur.fetchone()
-        id_beneficiario = beneficiario[0] if beneficiario else None
+        id_beneficiario = cur.lastrowid
 
         if id_beneficiario:
             agregar_cama(id_hospital, id_beneficiario)
@@ -118,9 +124,14 @@ def hospital(id):
     )
 
 
-# Función auxiliar (no ruta)
+# Función auxiliar para agregar una cama
 def agregar_cama(id_hospital, id_beneficiario):
     cur = mysql.connection.cursor()
     cur.execute('INSERT INTO camas (id_hospital, id_beneficiario) VALUES (%s,%s)',
                 (id_hospital, id_beneficiario))
     mysql.connection.commit()
+
+
+# Ejecutar en local
+if __name__ == '__main__':
+    app.run(debug=True)
