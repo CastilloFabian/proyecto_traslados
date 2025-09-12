@@ -13,7 +13,7 @@ app.config['MYSQL_HOST'] = "monorail.proxy.rlwy.net"
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_USER'] = "root"
 app.config['MYSQL_PASSWORD'] = KuarVtvnJSlZGhbLyJzDiUIsUKLAVdiQ
-app.config['MYSQL_DB'] = railway
+app.config['MYSQL_DB'] = "railway"
 
 # Inicializar MySQL
 mysql = MySQL(app)
