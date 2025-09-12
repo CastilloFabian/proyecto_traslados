@@ -9,11 +9,11 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configuración de la base de datos usando variables de entorno
-app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
-app.config['MYSQL_PORT'] = int(os.environ.get('MYSQL_PORT', 3306))  # Default a 3306
-app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER')
-app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
-app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB')
+app.config['MYSQL_HOST'] = "monorail.proxy.rlwy.net"
+app.config['MYSQL_PORT'] = 3306
+app.config['MYSQL_USER'] = "root"
+app.config['MYSQL_PASSWORD'] = KuarVtvnJSlZGhbLyJzDiUIsUKLAVdiQ
+app.config['MYSQL_DB'] = railway
 
 # Inicializar MySQL
 mysql = MySQL(app)
