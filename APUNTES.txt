@@ -1,0 +1,16 @@
+seleccionar todo de una tabla 
+
+cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM camas')
+    data = cur.fetchall()
+    
+seleccionar dependiendo un valor
+cur.execute('SELECT * FROM beneficiario WHERE id = %s', (id,))
+    data = cur.fetchall()
+////////////////////////////////////////////////////////////////////////////////
+
+agregar un registro
+cur = mysql.connection.cursor()
+        cur.execute('INSERT INTO beneficiario (nombre, apellido, dni) VALUES (%s,%s,%s)',(nombre, apellido, dni))
+        mysql.connection.commit()
+////////////////////////////////////////////////////////////////////////////////
