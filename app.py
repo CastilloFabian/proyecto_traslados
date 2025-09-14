@@ -9,19 +9,12 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configuración de la base de datos usando variables de entorno
-<<<<<<< HEAD
-app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
-app.config['MYSQL_PORT'] = int(os.getenv('MYSQL_PORT', 3306))
-app.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
-app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
-app.config['MYSQL_DB'] = os.getenv('MYSQL_DB')
-=======
-app.config['MYSQL_HOST'] = "mysql.railway.internal"
-app.config['MYSQL_PORT'] = 3306
+
+app.config['MYSQL_HOST'] = "centerbeam.proxy.rlwy.net"
+app.config['MYSQL_PORT'] = 54981
 app.config['MYSQL_USER'] = "root"
 app.config['MYSQL_PASSWORD'] = "KuarVtvnJSlZGhbLyJzDiUIsUKLAVdiQ"
 app.config['MYSQL_DB'] = "railway"
->>>>>>> db2d33b6a5ce355f7586d8c12c95cb5d4f6ffe1c
 
 # Inicializar MySQL
 mysql = MySQL(app)
