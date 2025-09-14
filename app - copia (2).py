@@ -9,6 +9,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configuración de la base de datos usando variables de entorno
+
 app.config['MYSQL_HOST'] = "centerbeam.proxy.rlwy.net"
 app.config['MYSQL_PORT'] = 54981
 app.config['MYSQL_USER'] = "root"
@@ -35,45 +36,29 @@ def Index():
         return render_template('index.html', beneficiarios=[])
 
 
-# Ruta para agregar beneficiario con validaciones
+# Ruta para agregar beneficiario
 @app.route('/agregarBeneficiario', methods=['POST'])
 def agregarBeneficiario():
     if request.method == 'POST':
         try:
-            # Obtener datos del formulario de forma segura y limpia
-            nombre = request.form.get('nombre', '').strip()
-            apellido = request.form.get('apellido', '').strip()
-            dni = request.form.get('dni', '').strip()
-            id_hospital = request.form.get('aux_nombre_hospital_vista', '').strip()
+            nombre = request.form['nombre']
+            apellido = request.form['apellido']
+            dni = request.form['dni']
+            id_hospital = request.form['aux_nombre_hospital_vista']
 
-            # Validaciones básicas
-            if not nombre or not apellido or not dni or not id_hospital:
-                flash("Todos los campos son obligatorios.", "danger")
-                return redirect(url_for('Index'))
-
-            if not dni.isdigit():
-                flash("El DNI debe contener solo números.", "danger")
-                return redirect(url_for('Index'))
-
-            try:
-                id_hospital = int(id_hospital)
-            except ValueError:
-                flash("ID del hospital inválido.", "danger")
-                return redirect(url_for('Index'))
-
-            # Insertar beneficiario en la base de datos
             cur = mysql.connection.cursor()
             cur.execute('INSERT INTO beneficiario (nombre, apellido, dni) VALUES (%s, %s, %s)',
                         (nombre, apellido, dni))
             mysql.connection.commit()
 
+            flash('Beneficiario agregado con éxito', 'success')
+
+            # Obtener ID del beneficiario recién agregado
             id_beneficiario = cur.lastrowid
 
-            # Asignar cama si se insertó el beneficiario correctamente
             if id_beneficiario:
                 agregar_cama(id_hospital, id_beneficiario)
 
-            flash('Beneficiario agregado con éxito', 'success')
             return redirect(url_for('hospital', id=id_hospital))
 
         except Exception as e:
@@ -82,7 +67,7 @@ def agregarBeneficiario():
 
 
 # Ruta para obtener datos de un beneficiario (para editar)
-@app.route('/edit/<int:id>')
+@app.route('/edit/<id>')
 def get_contact(id):
     try:
         cur = mysql.connection.cursor()
@@ -95,21 +80,13 @@ def get_contact(id):
 
 
 # Ruta para actualizar un beneficiario
-@app.route('/update/<int:id>', methods=['POST'])
+@app.route('/update/<id>', methods=['POST'])
 def update(id):
     if request.method == 'POST':
         try:
-            nuevo_nombre = request.form.get('nombre', '').strip()
-            nuevo_apellido = request.form.get('apellido', '').strip()
-            nuevo_dni = request.form.get('dni', '').strip()
-
-            if not nuevo_nombre or not nuevo_apellido or not nuevo_dni:
-                flash("Todos los campos son obligatorios.", "danger")
-                return redirect(url_for('get_contact', id=id))
-
-            if not nuevo_dni.isdigit():
-                flash("El DNI debe contener solo números.", "danger")
-                return redirect(url_for('get_contact', id=id))
+            nuevo_nombre = request.form['nombre']
+            nuevo_apellido = request.form['apellido']
+            nuevo_dni = request.form['dni']
 
             cur = mysql.connection.cursor()
             cur.execute("""
@@ -130,7 +107,7 @@ def update(id):
 
 
 # Ruta para eliminar un beneficiario
-@app.route('/delete/<int:id>/<int:id_hospital>')
+@app.route('/delete/<id>/<id_hospital>')
 def delete_beneficiario(id, id_hospital):
     try:
         cur = mysql.connection.cursor()
@@ -152,7 +129,7 @@ def delete_beneficiario(id, id_hospital):
 
 
 # Vista de hospital (ver camas y beneficiarios asociados)
-@app.route('/hospital/<int:id>')
+@app.route('/hospital/<id>')
 def hospital(id):
     try:
         cur = mysql.connection.cursor()
