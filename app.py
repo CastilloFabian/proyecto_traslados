@@ -14,7 +14,7 @@ app = Flask(__name__)
 # Configuración de la base de datos usando variables de entorno
 
 app.config['MYSQL_HOST'] = "centerbeam.proxy.rlwy.net"
-app.config['MYSQL_PORT'] = 54981
+app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_USER'] = "root"
 app.config['MYSQL_PASSWORD'] = "KuarVtvnJSlZGhbLyJzDiUIsUKLAVdiQ"
 app.config['MYSQL_DB'] = "railway"
