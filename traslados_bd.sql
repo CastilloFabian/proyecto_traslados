@@ -1,192 +1,82 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Servidor: 127.0.0.1
--- Tiempo de generación: 11-09-2025 a las 03:55:20
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- ----------------------------------------------
+-- BASE DE DATOS: traslados_bd (versión corregida)
+-- ----------------------------------------------
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- Eliminar y crear base de datos
+DROP DATABASE IF EXISTS traslados_bd;
+CREATE DATABASE traslados_bd CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci;
+USE traslados_bd;
 
+-- Tabla: hospitales
+CREATE TABLE hospitales (
+  id_hospital INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(50) NOT NULL,
+  direccion VARCHAR(100),
+  email VARCHAR(100)
+);
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+-- Tabla: beneficiario
+CREATE TABLE beneficiario (
+  id_beneficiario INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  apellido VARCHAR(100) NOT NULL,
+  dni VARCHAR(20) NOT NULL,
+  fecha_nacimiento DATE,
+  sexo ENUM('M', 'F', 'Otro'),
+  diagnostico_emisor TEXT,
+  diagnostico_receptor TEXT,
+  fecha_ingreso DATE,
+  fecha_egreso DATE
+);
 
---
--- Base de datos: `traslados_bd`
---
+-- Tabla: camas
+CREATE TABLE camas (
+  id_cama INT AUTO_INCREMENT PRIMARY KEY,
+  id_hospital INT NOT NULL,
+  id_beneficiario INT DEFAULT NULL,
+  numero_cama VARCHAR(10),
+  estado ENUM('Libre','Ocupada') DEFAULT 'Libre',
+  tipo_cama ENUM('UCI','Normal','Pediátrica','Otro'),
+  FOREIGN KEY (id_hospital) REFERENCES hospitales(id_hospital),
+  FOREIGN KEY (id_beneficiario) REFERENCES beneficiario(id_beneficiario)
+);
 
--- --------------------------------------------------------
+-- Tabla: especialistas
+CREATE TABLE especialistas (
+  id_especialista INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(50) NOT NULL,
+  especialidad VARCHAR(50),
+  telefono VARCHAR(20),
+  email VARCHAR(100),
+  id_hospital INT,
+  FOREIGN KEY (id_hospital) REFERENCES hospitales(id_hospital)
+);
 
---
--- Estructura de tabla para la tabla `beneficiario`
---
+-- ---------------------------------------
+-- DATOS DE EJEMPLO
+-- ---------------------------------------
 
-CREATE TABLE `beneficiario` (
-  `id_beneficiario` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `apellido` varchar(100) NOT NULL,
-  `dni` varchar(20) NOT NULL,
-  `fecha_nacimiento` varchar(30) NOT NULL,
-  `sexo` varchar(30) NOT NULL,
-  `diagnostico_emisor` varchar(500) NOT NULL,
-  `diagnostico_receptor` varchar(500) NOT NULL,
-  `fecha_ingreso` varchar(30) NOT NULL,
-  `fecha_egreso` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+-- Hospitales
+INSERT INTO hospitales (nombre, direccion, email) VALUES
+('LLANO', 'LLANO 100', 'llano@gmail.com'),
+('ESCUELA', 'ESCUELA 100', 'escuela@gmail.com');
 
---
--- Volcado de datos para la tabla `beneficiario`
---
+-- Beneficiarios
+INSERT INTO beneficiario (nombre, apellido, dni, fecha_nacimiento, sexo, diagnostico_emisor, diagnostico_receptor, fecha_ingreso, fecha_egreso) VALUES
+('SOFIA', 'LLANES', '12345678', '1990-05-10', 'F', 'Dolor abdominal', 'Apendicitis', '2025-09-01', '2025-09-05'),
+('FABIAN', 'CASTILLO', '36316013', '1991-06-04', 'M', 'Insuficiencia respiratoria', 'Neumonía', '2025-09-10', NULL),
+('LUNA', 'CASTILLO', '20231234', '2023-08-15', 'P', 'Fiebre alta', 'Infección viral', '2025-09-15', NULL),
+('YUNI', 'MACIEL', '19913456', NULL, NULL, '', '', NULL, NULL);
 
-INSERT INTO `beneficiario` (`id_beneficiario`, `nombre`, `apellido`, `dni`, `fecha_nacimiento`, `sexo`, `diagnostico_emisor`, `diagnostico_receptor`, `fecha_ingreso`, `fecha_egreso`) VALUES
-(1, 'sofia ', 'Llanes', '15', '88', 'F', '', '', '', ''),
-(2, 'FABIAN', 'CASTILLO', '36316013', '4/6/1991', 'M', 'dig_emi', 'dig_rec', '2/7/2025', ''),
-(15, 'LUNA', 'CASTILLO', '2023', '2023', 'P', 'dig_emi', 'dig_rec', '2023', ''),
-(17, 'YUNI', 'MACIEL ', '1991', '', '', '', '', '', '');
+-- Camas
+INSERT INTO camas (id_hospital, id_beneficiario, numero_cama, estado, tipo_cama) VALUES
+(1, 1, 'C101', 'Ocupada', 'UCI'),
+(2, 2, 'C202', 'Ocupada', 'Normal'),
+(2, 3, 'C203', 'Ocupada', 'Pediátrica'),
+(2, NULL, 'C204', 'Libre', 'Normal'),
+(1, NULL, 'C105', 'Libre', 'UCI');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `camas`
---
-
-CREATE TABLE `camas` (
-  `id_cama` int(11) NOT NULL,
-  `id_hospital` int(11) NOT NULL,
-  `id_beneficiario` int(11) DEFAULT NULL,
-  `numero_cama` varchar(10) NOT NULL,
-  `estado` enum('Libre','Ocupada') NOT NULL,
-  `tipo_cama` enum('UCI','Normal','Pediátrica','Otro') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-
---
--- Volcado de datos para la tabla `camas`
---
-
-INSERT INTO `camas` (`id_cama`, `id_hospital`, `id_beneficiario`, `numero_cama`, `estado`, `tipo_cama`) VALUES
-(1, 1, 1, '', '', ''),
-(2, 2, 2, '', 'Ocupada', 'Normal'),
-(3, 2, 15, '', 'Ocupada', 'Pediátrica'),
-(11, 2, NULL, '', '', ''),
-(12, 2, NULL, '', '', ''),
-(13, 2, NULL, '', '', ''),
-(14, 1, NULL, '', 'Libre', ''),
-(15, 1, NULL, '', 'Libre', ''),
-(16, 1, NULL, '', 'Libre', '');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `especialistas`
---
-
-CREATE TABLE `especialistas` (
-  `id_especialista` int(30) NOT NULL,
-  `nombre` varchar(30) NOT NULL,
-  `especialidad` varchar(30) NOT NULL,
-  `telefono` varchar(30) NOT NULL,
-  `email` varchar(30) NOT NULL,
-  `id_hospital` int(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `hospitales`
---
-
-CREATE TABLE `hospitales` (
-  `id_hospital` int(11) NOT NULL,
-  `nombre` varchar(30) NOT NULL,
-  `direccion` varchar(30) NOT NULL,
-  `email` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-
---
--- Volcado de datos para la tabla `hospitales`
---
-
-INSERT INTO `hospitales` (`id_hospital`, `nombre`, `direccion`, `email`) VALUES
-(1, 'LLANO', 'LLANO 100', 'LLANO@GMAIL.COM'),
-(2, 'ESCUELA', 'ESCUELA 100', 'ESCUELA@GMAIL.COM');
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `beneficiario`
---
-ALTER TABLE `beneficiario`
-  ADD PRIMARY KEY (`id_beneficiario`);
-
---
--- Indices de la tabla `camas`
---
-ALTER TABLE `camas`
-  ADD PRIMARY KEY (`id_cama`),
-  ADD KEY `id_hospital` (`id_hospital`),
-  ADD KEY `id_beneficiario` (`id_beneficiario`);
-
---
--- Indices de la tabla `especialistas`
---
-ALTER TABLE `especialistas`
-  ADD PRIMARY KEY (`id_especialista`),
-  ADD KEY `id_hospital` (`id_hospital`);
-
---
--- Indices de la tabla `hospitales`
---
-ALTER TABLE `hospitales`
-  ADD PRIMARY KEY (`id_hospital`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `beneficiario`
---
-ALTER TABLE `beneficiario`
-  MODIFY `id_beneficiario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
-
---
--- AUTO_INCREMENT de la tabla `camas`
---
-ALTER TABLE `camas`
-  MODIFY `id_cama` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
-
---
--- AUTO_INCREMENT de la tabla `especialistas`
---
-ALTER TABLE `especialistas`
-  MODIFY `id_especialista` int(30) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `hospitales`
---
-ALTER TABLE `hospitales`
-  MODIFY `id_hospital` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `camas`
---
-ALTER TABLE `camas`
-  ADD CONSTRAINT `camas_ibfk_1` FOREIGN KEY (`id_hospital`) REFERENCES `hospitales` (`id_hospital`),
-  ADD CONSTRAINT `camas_ibfk_2` FOREIGN KEY (`id_beneficiario`) REFERENCES `beneficiario` (`id_beneficiario`);
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Especialistas
+INSERT INTO especialistas (nombre, especialidad, telefono, email, id_hospital) VALUES
+('Dr. Juan Pérez', 'Cardiología', '123456789', 'juan.perez@hospital.com', 1),
+('Dra. Laura Gómez', 'Pediatría', '987654321', 'laura.gomez@hospital.com', 2);
