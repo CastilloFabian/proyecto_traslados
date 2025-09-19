@@ -1,55 +1,65 @@
-<!-- templates/index.html -->
+{% extends 'layout.html'%}
 
-{% extends 'layout.html' %}
+{% block body%}
 
-{% block body %}
-
-<h2>Agregar Beneficiario</h2>
-
-<!-- Mostrar mensajes flash -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <p style="color: {% if category == 'danger' %}red{% elif category == 'success' %}green{% else %}black{% endif %};">
-        {{ message }}
-      </p>
-    {% endfor %}
-  {% endif %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<p>{{message}}</p>
+{% endfor %}
+{% endif %}
 {% endwith %}
 
-<!-- Formulario para agregar beneficiario -->
-<form action="{{ url_for('agregarBeneficiario') }}" method="POST">
-  <table>
-    <tr>
-      <td><input type="text" name="apellido" placeholder="Apellido"></td>
-      <td><input type="text" name="nombre" placeholder="Nombre"></td>
-      <td><input type="text" name="dni" placeholder="DNI"></td>
-      <td><button type="submit">GUARDAR</button></td>
-    </tr>
-  </table>
-</form>
-
-<br><br>
-
-<!-- Tabla de beneficiarios existentes -->
-<h2>Lista de Beneficiarios</h2>
-<table border="1" cellpadding="5" cellspacing="0">
-  <thead>
-    <tr>
-      <th>Apellido</th>
-      <th>Nombre</th>
-      <th>DNI</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for beneficiario in beneficiarios %}
-    <tr>
-      <td>{{ beneficiario[2] }}</td>
-      <td>{{ beneficiario[1] }}</td>
-      <td>{{ beneficiario[3] }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+<table>
+    <thead>
+        <tr>
+            <th style="text-align: center;">Apellido</th>
+            <th style="text-align: center;">Nombre</th>
+            <th style="text-align: center;">DNI</th>
+        </tr>
+    </thead>
+    <tbody>
+        <form action="/agregarBeneficiario" method="POST">
+            <td>
+                <input type="text" name="apellido" placeholder="Apellido">
+            </td>
+            <td>
+                <input type="text" name="nombre" placeholder="Nombre">
+            </td>
+            <td>
+                <input type="text" name="dni" placeholder="DNI">
+            </td>
+            <td>
+                <button type="submit">GUARDAR</button> 
+            </td>
+        </form>
+    </tbody>
 </table>
+    
 
+
+
+<table>
+    <thead>
+        <tr>
+            <td>Apellido</td>
+            <td>Nombre</td>
+            <td>DNI</td>
+        </tr>
+    </thead>
+    <tbody>
+        {%for beneficiario in beneficiarios%}
+        <tr>
+            <td>{{beneficiario.2}}</td>
+            <td>{{beneficiario.1}}</td>
+            <td>{{beneficiario.3}}</td>
+            <td>
+                <a href="/edit/{{beneficiario.0}}">EDITAR</a>
+                <a href="/delate/{{beneficiario.0}}">BORRAR</a>
+            </td>
+        </tr>
+        {%endfor%}
+    </tbody>
+</table>
+    
 {% endblock %}
