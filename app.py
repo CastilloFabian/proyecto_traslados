@@ -14,11 +14,11 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configuración de la base de datos
-app.config['MYSQL_HOST'] = ""
-app.config['MYSQL_PORT'] = 
-app.config['MYSQL_USER'] = ""
-app.config['MYSQL_PASSWORD'] = ""
-app.config['MYSQL_DB'] = ""
+app.config['MYSQL_HOST'] = "mysql-383b2079-fabianrmx-014d.b.aivencloud.com"
+app.config['MYSQL_PORT'] = 26821
+app.config['MYSQL_USER'] = "avnadmin"
+app.config['MYSQL_PASSWORD'] = "AVNS_crqvNWGBbCnEeSS0FeV"
+app.config['MYSQL_DB'] = "AivenDB"
 
 mysql = MySQL(app)
 app.secret_key = os.getenv('SECRET_KEY', 'mysecretkey')
