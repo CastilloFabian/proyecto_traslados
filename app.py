@@ -14,11 +14,11 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configuración de la base de datos
-app.config['MYSQL_HOST'] = "centerbeam.proxy.rlwy.net"
-app.config['MYSQL_PORT'] = 54981
-app.config['MYSQL_USER'] = "root"
-app.config['MYSQL_PASSWORD'] = "KuarVtvnJSlZGhbLyJzDiUIsUKLAVdiQ"
-app.config['MYSQL_DB'] = "railway"
+app.config['MYSQL_HOST'] = ""
+app.config['MYSQL_PORT'] = 
+app.config['MYSQL_USER'] = ""
+app.config['MYSQL_PASSWORD'] = ""
+app.config['MYSQL_DB'] = ""
 
 mysql = MySQL(app)
 app.secret_key = os.getenv('SECRET_KEY', 'mysecretkey')
