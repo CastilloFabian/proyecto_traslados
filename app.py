@@ -18,7 +18,8 @@ app.config['MYSQL_HOST'] = "mysql-383b2079-fabianrmx-014d.b.aivencloud.com"
 app.config['MYSQL_PORT'] = 26821
 app.config['MYSQL_USER'] = "avnadmin"
 app.config['MYSQL_PASSWORD'] = "AVNS_crqvNWGBbCnEeSS0FeV"
-app.config['MYSQL_DB'] = "AivenDB"
+app.config['MYSQL_DB'] = "defaultdb"
+app.config['MYSQL_SSL_CA'] = r"C:\Users\USUARIO\Desktop\traslados\aiven-ca.pem"
 
 mysql = MySQL(app)
 app.secret_key = os.getenv('SECRET_KEY', 'mysecretkey')
