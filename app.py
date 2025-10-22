@@ -107,22 +107,26 @@ def update(id):
 
 
 # Ruta para eliminar un beneficiario
-@app.route('/delete/<id>/<id_hospital>')
-def delete_beneficiario(id, id_hospital):
+# @app.route('/delete/<id>/<id_hospital>')
+# def delete_beneficiario(id, id_hospital):
+
+@app.route('/delete/<id>')
+def delete_beneficiario(id):
     try:
         cur = mysql.connection.cursor()
 
         # Eliminar cama asociada
-        cur.execute('DELETE FROM camas WHERE id_beneficiario = %s', (id,))
-        mysql.connection.commit()
+        # cur.execute('DELETE FROM camas WHERE id_beneficiario = %s', (id,))
+        # mysql.connection.commit()
 
         # Eliminar beneficiario
         cur.execute('DELETE FROM beneficiario WHERE id_beneficiario = %s', (id,))
         mysql.connection.commit()
 
         flash('Contacto eliminado con éxito', 'success')
-        return redirect(url_for('hospital', id=id_hospital))
-
+        # return redirect(url_for('hospital', id=id_hospital))
+        return redirect(url_for('Index'))
+    
     except Exception as e:
         flash(f"Error al eliminar contacto: {str(e)}", 'danger')
         return redirect(url_for('Index'))
