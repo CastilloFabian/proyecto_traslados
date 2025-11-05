@@ -28,5 +28,10 @@ def index():
     # Pasamos solo el nombre y el enlace público a la vista
     return render_template("index.html", archivos=archivos)
 
+# funciona para local
+# if __name__ == "__main__":
+#     app.run(debug=True)
+
+#funciona para render
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
