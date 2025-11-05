@@ -1,3 +1,17 @@
+<<<<<<< HEAD
+=======
+{% extends 'layout.html'%}
+
+{% block body%}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<p>{{message}}</p>
+{% endfor %}
+{% endif %}
+{% endwith %}
+>>>>>>> 734807efe30e2c77b68bc59fb51b315415113f23
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -20,3 +34,11 @@
     {% endif %}
 </body>
 </html>
+<<<<<<< HEAD
+=======
+        {%endfor%}
+    </tbody>
+</table>
+    
+{% endblock %}
+>>>>>>> 734807efe30e2c77b68bc59fb51b315415113f23

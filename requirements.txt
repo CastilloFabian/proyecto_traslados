@@ -4,4 +4,9 @@ gunicorn==21.2.0
 python-dotenv==1.0.0
 Jinja2==3.1.3
 Werkzeug==2.3.7
+<<<<<<< HEAD
 PyMySQL
+=======
+PyMySQL
+mega.py
+>>>>>>> 734807efe30e2c77b68bc59fb51b315415113f23

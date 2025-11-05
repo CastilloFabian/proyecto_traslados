@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 1- 
 cd C:\Users\LUNA\Desktop\traslados
 PS C:\Users\LUNA\Desktop\traslados> python -m venv env
@@ -34,6 +35,8 @@ pip install flask_sqlalchemy pymysql
 ////////////////////////////////////////////////////
 								
 ////////////////////////////////////////////////////
+=======
+>>>>>>> 734807efe30e2c77b68bc59fb51b315415113f23
 seleccionar todo de una tabla 
 
 cur = mysql.connection.cursor()

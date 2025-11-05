@@ -16,6 +16,10 @@ app.config['MYSQL_USER'] = "root"
 app.config['MYSQL_PASSWORD'] = "KuarVtvnJSlZGhbLyJzDiUIsUKLAVdiQ"
 app.config['MYSQL_DB'] = "railway"
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 734807efe30e2c77b68bc59fb51b315415113f23
 # Inicializar MySQL
 mysql = MySQL(app)
 
