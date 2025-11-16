@@ -31,7 +31,7 @@ PIP instalaciones
 pip install Flask python-dotenv mega.py flask-mysqldb
 
 pip install flask==2.2.5
-pip werkzeug==2.2.3
+pip install werkzeug==2.2.3
 
 pip install flask
 pip install flask-mysqldb
