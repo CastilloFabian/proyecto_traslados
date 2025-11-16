@@ -59,9 +59,9 @@ def index():
     return render_template("index.html",archivos=archivos ,beneficiarios=beneficiarios)
 
 # funciona para local
-if __name__ == "__main__":
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     app.run(debug=True)
 
 #funciona para render
-# if __name__ == "__main__":
-#     app.run()
+if __name__ == "__main__":
+    app.run()
