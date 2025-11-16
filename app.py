@@ -1,67 +1,75 @@
 import os
 from flask_mysql_connector import MySQL
-# from flask_mysqldb import MySQL
-# from dotenv import load_dotenv
-
 from flask import Flask, render_template
 from mega import Mega
 
 app = Flask(__name__)
-# ////////////////////////////////////////////////////
-# mysql
-# //////////////////////////////////////////////////////
+
+# ----------------------------------------
+# CONFIGURACIÓN MYSQL (IMPORTANTE PARA RENDER)
+# ----------------------------------------
 app.config['MYSQL_HOST']     = 'mysql-383b2079-fabianrmx-014d.b.aivencloud.com'
 app.config['MYSQL_USER']     = 'root'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_PASSWORD'] = 'AVNS_crqvNWGBbCnEeSS0FeV'  # <- pon aquí tu PASS REAL
 app.config['MYSQL_DATABASE'] = 'defaultdb'
+app.config['MYSQL_POOL_NAME'] = 'pool1'
+app.config['MYSQL_POOL_SIZE'] = 5
+
 mysql = MySQL(app)
 
-# //////////////////////////////////////////////////////
-#
-# //////////////////////////////////////////////////////
-# --- Configuración de Mega ---
+# ----------------------------------------
+# CONFIG MEGA
+# ----------------------------------------
 MEGA_EMAIL = "castillofabian.uep@gmail.com"
 MEGA_PASSWORD = "--uep2024--"
 
-# Conectarse a Mega (solo la app inicia sesión)
-mega = Mega()
-m = mega.login(MEGA_EMAIL, MEGA_PASSWORD)
-print(m)
-# //////////////////////////////////////////////////////
-#
-# //////////////////////////////////////////////////////
+# Esta función maneja MEGA cuando la necesites
+def obtener_archivos_mega():
+    mega = Mega()
+
+    try:
+        m = mega.login(MEGA_EMAIL, MEGA_PASSWORD)
+    except Exception as e:
+        print("ERROR iniciando sesión en MEGA:", e)
+        return []
+
+    nombres_archivos = ["imagen1.jpg", "imagen1.pdf"]
+    archivos = []
+
+    for nombre in nombres_archivos:
+        try:
+            archivo = m.find(nombre)
+            if archivo:
+                enlace = m.get_link(archivo)
+                archivos.append({'nombre': nombre, 'enlace': enlace})
+        except:
+            pass
+
+    return archivos
 
 
-# Lista de nombres de archivos que quieres mostrar
-nombres_archivos = ["imagen1.jpg", "imagen1.pdf"]
-archivos = []
-print(archivos)
-
-for nombre in nombres_archivos:
-    archivo = m.find(nombre)  # Buscar el archivo en tu cuenta
-    if archivo:
-        enlace = m.get_link(archivo)  # Generar enlace público
-        archivos.append({'nombre': nombre, 'enlace': enlace})
-        print(f"Archivo {nombre} ENCONTRADO")
-    else:
-        print(f"Archivo {nombre} no encontrado")
-
-print("---------------------------------------------------")
-print(archivos)
-print("---------------------------------------------------")
-
+# ----------------------------------------
+# RUTAS
+# ----------------------------------------
 @app.route("/")
 def index():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM beneficiario")
-    beneficiarios = cur.fetchall()
-    # Pasamos solo el nombre y el enlace público a la vista
-    return render_template("index.html",archivos=archivos ,beneficiarios=beneficiarios)
+    # Obtener beneficiarios desde MySQL
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM beneficiario")
+        beneficiarios = cur.fetchall()
+    except Exception as e:
+        print("ERROR MySQL:", e)
+        beneficiarios = []
 
-# funciona para local
-# if __name__ == "__main__":
-#     app.run(debug=True)
+    # Obtener archivos desde MEGA SIN BLOQUEAR EL SERVIDOR
+    archivos = obtener_archivos_mega()
 
-#funciona para render
+    return render_template("index.html", archivos=archivos, beneficiarios=beneficiarios)
+
+
+# ----------------------------------------
+# EJECUTAR EN RENDER
+# ----------------------------------------
 if __name__ == "__main__":
     app.run()
