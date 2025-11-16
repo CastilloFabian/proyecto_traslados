@@ -10,10 +10,10 @@ app = Flask(__name__)
 # ////////////////////////////////////////////////////
 # mysql
 # //////////////////////////////////////////////////////
-app.config['MYSQL_HOST']     = 'localhost'
+app.config['MYSQL_HOST']     = 'mysql-383b2079-fabianrmx-014d.b.aivencloud.com'
 app.config['MYSQL_USER']     = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DATABASE'] = 'traslados_bd'
+app.config['MYSQL_DATABASE'] = 'defaultdb'
 mysql = MySQL(app)
 
 # //////////////////////////////////////////////////////
