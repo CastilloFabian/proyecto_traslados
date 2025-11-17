@@ -1,26 +1,32 @@
 import os
-from flask_mysql_connector import MySQL
 from flask import Flask, render_template, jsonify
+from flask_mysql_connector import MySQL
 from mega import Mega
 
 app = Flask(__name__)
 
 # ----------------------------------------
-# CONFIG MYSQL CON SSL
+# CONFIG MYSQL (CORREGIDO)
 # ----------------------------------------
 app.config['MYSQL_HOST'] = 'mysql-383b2079-fabianrmx-014d.b.aivencloud.com'
 app.config['MYSQL_USER'] = 'avnadmin'
 app.config['MYSQL_PASSWORD'] = 'AVNS_crqvNWGBbCnEeSS0FeV'
 app.config['MYSQL_DATABASE'] = 'defaultdb'
 app.config['MYSQL_PORT'] = 26821
-app.config['MYSQL_SSL_CA'] = './ca.pem'   # archivo certificado
+
+# nombre corto para evitar el error
+app.config['MYSQL_POOL_NAME'] = 'p1'
+app.config['MYSQL_POOL_SIZE'] = 5
+
+# SSL Aiven
+app.config['MYSQL_SSL_CA'] = 'ca.pem'
 app.config['MYSQL_SSL_DISABLED'] = False
 
 mysql = MySQL(app)
 
 
 # ----------------------------------------
-# RUTA PRINCIPAL SIN MEGA
+# RUTA PRINCIPAL
 # ----------------------------------------
 @app.route("/")
 def index():
