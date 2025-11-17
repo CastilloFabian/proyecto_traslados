@@ -44,30 +44,37 @@ def index():
 # ----------------------------------------
 # RUTA PARA MEGA
 # ----------------------------------------
-@app.route("/mega")
-def mega_route():
+@app.route("/mega/<nombre_archivo>")
+def mega_route(nombre_archivo):
     MEGA_EMAIL = "castillofabian.uep@gmail.com"
     MEGA_PASSWORD = "--uep2024--"
 
     mega = Mega()
+
     try:
         m = mega.login(MEGA_EMAIL, MEGA_PASSWORD)
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return f"Error al iniciar sesión en MEGA: {e}", 500
 
-    nombres = ["imagen1.jpg", "imagen1.pdf"]
-    archivos = []
+    nombre_archivo = nombre_archivo + ".pdf"
 
-    for n in nombres:
-        arch = m.find(n)
-        if arch:
-            archivos.append({"nombre": n, "enlace": m.get_link(arch)})
+    archivo = m.find(nombre_archivo)
 
-    return jsonify(archivos)
+    if not archivo:
+        return f"No se encontró el archivo: {nombre_archivo}", 404
+
+    enlace = m.get_link(archivo)
+
+    # Renderiza una página que luego hace redirect desde el navegador
+    return render_template("abrir_mega.html", enlace=enlace)
+    #-------------------------
 
 
 # ----------------------------------------
 # EJECUTAR EN RENDER
 # ----------------------------------------
+# if __name__ == "__main__":
+#     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(debug=True)

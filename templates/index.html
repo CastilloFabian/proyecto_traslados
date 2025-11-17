@@ -64,6 +64,17 @@
              -->
                 {{ beneficiario[1] }}
                 {{ beneficiario[2] }}
+                {{ beneficiario[3] }}
+                {{ beneficiario[4] }}
+                {{ beneficiario[11] }}
+                <!-- QUIERO QUE CONSULTE A MEGA SOLO CUANDO TOQUE EL BOTON VER -->
+                   <button>
+                        <a href="{{ url_for('mega_route', nombre_archivo=beneficiario[11]) }}">
+                        Ver Mega
+                        </a>
+                    </button>
+                <p>Fin de mega *************************</p>
+
                     {% if archivos %}
                         {% for archivo in archivos %}
                             {%if archivo.nombre == beneficiario[11] ~ ".pdf"%}
